@@ -36,14 +36,15 @@ def create_app(config):
 
     @app.route('/book/<competition>/<club>')
     def book(competition, club):
-        club = [c for c in clubs if c['name'] == club][0]
-        competition = [c for c in competitions if c['name'] == competition][0]
-        if club and competition:
-            max_places = int(club['points'])
-            if max_places > max_bookable_places:
-                max_places = max_bookable_places
-            return render_template('booking.html', club=club, competition=competition, max_places=max_places)
-        else:
+        try:
+            club = [c for c in clubs if c['name'] == club][0]
+            competition = [c for c in competitions if c['name'] == competition][0]
+            if club and competition:
+                max_places = int(club['points'])
+                if max_places > max_bookable_places:
+                    max_places = max_bookable_places
+                return render_template('booking.html', club=club, competition=competition, max_places=max_places)
+        except IndexError:
             flash("Something went wrong-please try again")
             return render_template('welcome.html', club=club, competitions=competitions)
 
