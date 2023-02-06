@@ -1,4 +1,5 @@
 import json
+from utils import get_future_competitions
 from flask import Flask,render_template,request,redirect,flash,url_for
 
 
@@ -11,14 +12,17 @@ def load_competitions():
     with open('competitions.json') as comps:
          return json.load(comps)['competitions']
 
+clubs = load_clubs()
+competitions = load_competitions()
 max_bookable_places = 12
+error_default = 'Something went wrong | Please try again'
+error_email = 'Please enter a valid email'
+validation_booking = 'Booking complete!'
 
 def create_app(config):
     app = Flask(__name__)
     app.secret_key = 'something_special'
     app.config.from_object(config)
-    competitions = load_competitions()
-    clubs = load_clubs()
 
     @app.route('/')
     def index():
@@ -28,15 +32,17 @@ def create_app(config):
     def show_summary():
         try:
             club = [club for club in clubs if club['email'] == request.form['email']][0]
+            globals()['competitions'] = get_future_competitions(competitions)
             return render_template('welcome.html', club=club, competitions=competitions)
         except IndexError:
-            flash('please enter a valid email')
+            flash(error_email)
             return redirect(url_for('index'))
 
 
     @app.route('/book/<competition>/<club>')
     def book(competition, club):
         try:
+            globals()['competitions'] = get_future_competitions(competitions)
             club = [c for c in clubs if c['name'] == club][0]
             competition = [c for c in competitions if c['name'] == competition][0]
             if club and competition:
@@ -45,19 +51,32 @@ def create_app(config):
                     max_places = max_bookable_places
                 return render_template('booking.html', club=club, competition=competition, max_places=max_places)
         except IndexError:
-            flash("Something went wrong-please try again")
+            flash(error_default)
             return render_template('welcome.html', club=club, competitions=competitions)
 
 
     @app.route('/purchase_places',methods=['POST'])
     def purchase_places():
-        competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-        club = [c for c in clubs if c['name'] == request.form['club']][0]
-        places_required = int(request.form['places'])
-        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-places_required
-        club['points'] = int(club['points'])-places_required
-        flash('Great-booking complete!')
-        return render_template('welcome.html', club=club, competitions=competitions)
+        try:
+            globals()['competitions'] = get_future_competitions(competitions)
+            competition = [c for c in competitions if c['name'] == request.form['competition']][0]
+            club = [c for c in clubs if c['name'] == request.form['club']][0]
+            places_required = int(request.form['places'])
+            if places_required > max_bookable_places:
+                flash(error_default)
+                return render_template('welcome.html', club=club, competitions=competitions)
+            competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-places_required
+            club['points'] = int(club['points'])-places_required
+            flash(validation_booking)
+            return render_template('welcome.html', club=club, competitions=competitions)
+        except (IndexError, ValueError):
+            flash(error_default)
+            try:
+                club = [c for c in clubs if c['name'] == request.form['club']][0]
+                return render_template('welcome.html', club=club, competitions=competitions)
+            except IndexError:
+                return redirect(url_for('index'))
+
 
 
     # TODO: Add route for points display

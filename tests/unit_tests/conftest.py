@@ -6,17 +6,17 @@ from flask import template_rendered
 def clubs():
     return [
     {
-        "name":"Simply Lift",
-        "email":"john@simplylift.co",
+        "name":"Test Club One",
+        "email":"one@testclub.com",
         "points":"13"
     },
     {
-        "name":"Iron Temple",
-        "email": "admin@irontemple.com",
+        "name":"Test Club Two",
+        "email": "two@testclub.com",
         "points":"4"
     },
-    {   "name":"She Lifts",
-        "email": "kate@shelifts.co.uk",
+    {   "name":"Test Club Three",
+        "email": "three@testclub.com",
         "points":"12"
     }
 ]
@@ -24,19 +24,26 @@ def clubs():
 def competitions():
     return [
         {
-            "name": "Spring Festival",
+            "name": "Test Competition One",
             "date": "2020-03-27 10:00:00",
             "numberOfPlaces": "25"
         },
         {
-            "name": "Fall Classic",
-            "date": "2020-10-22 13:30:00",
+            "name": "Test Competition Two",
+            "date": "2023-10-22 13:30:00",
             "numberOfPlaces": "13"
+        },
+        {
+            "name": "Test Competition Three",
+            "date": "2023-09-12 19:30:00",
+            "numberOfPlaces": "10"
         }
     ]
 
 @pytest.fixture
-def app():
+def app(mocker):
+    mocker.patch.object(server, "clubs", clubs())
+    mocker.patch.object(server, "competitions", competitions())
     return server.create_app({"TESTING": True})
 
 @pytest.fixture
