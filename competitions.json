@@ -7,8 +7,13 @@
         },
         {
             "name": "Fall Classic",
-            "date": "2020-10-22 13:30:00",
+            "date": "2023-06-06 15:30:00",
             "numberOfPlaces": "13"
+        },
+		{
+            "name": "Winter All-stars",
+            "date": "2023-09-12 19:30:00",
+            "numberOfPlaces": "10"
         }
     ]
 }
