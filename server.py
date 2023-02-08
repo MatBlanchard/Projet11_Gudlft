@@ -1,16 +1,5 @@
-import json
-from utils import get_future_competitions
+from utils import load_competitions, load_clubs, get_future_competitions
 from flask import Flask,render_template,request,redirect,flash,url_for
-
-
-def load_clubs():
-    with open('clubs.json') as clubs:
-         return json.load(clubs)['clubs']
-
-
-def load_competitions():
-    with open('competitions.json') as comps:
-         return json.load(comps)['competitions']
 
 clubs = load_clubs()
 competitions = load_competitions()
@@ -19,7 +8,7 @@ error_default = 'Something went wrong | Please try again'
 error_email = 'Please enter a valid email'
 validation_booking = 'Booking complete!'
 
-def create_app(config):
+def create_app(config=None):
     app = Flask(__name__)
     app.secret_key = 'something_special'
     app.config.from_object(config)

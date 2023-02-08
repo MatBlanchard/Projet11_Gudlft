@@ -1,6 +1,6 @@
-import server
-from tests.unit_tests.conftest import clubs, competitions
-from utils import get_future_competitions
+from tests.conftest import clubs, competitions
+
+
 class TestPointsDisplay:
 
     clubs = clubs()
