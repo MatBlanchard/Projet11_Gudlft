@@ -1,6 +1,8 @@
 import server
 from tests.conftest import clubs, competitions
 from utils import get_future_competitions
+
+
 class TestShowSummary:
 
     clubs = clubs()

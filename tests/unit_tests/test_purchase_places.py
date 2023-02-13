@@ -43,8 +43,8 @@ class TestPurchasePlaces:
         comp = self.comps[1]
         nb_places = 1
         response = client.post('/purchase_places', follow_redirects=True, data={'competition': comp['name'],
-                                                         'club': 'invalid_club',
-                                                         'places': nb_places})
+                                                                                'club': 'invalid_club',
+                                                                                'places': nb_places})
         assert response.status_code == 200
         template, context = captured_templates[0]
         assert template.name == "index.html"
@@ -76,4 +76,3 @@ class TestPurchasePlaces:
         assert server.error_default in response.data.decode()
         assert context['club'] == club
         assert context['competitions'] == get_future_competitions(self.comps)
-

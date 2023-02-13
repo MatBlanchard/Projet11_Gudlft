@@ -21,7 +21,6 @@ class TestPurchasePlaces:
         assert context['club'] == club
         assert context['competitions'] == get_future_competitions(self.comps)
 
-
         # On affiche la page de booking d'une compétition
         response = client.get(f"/book/{self.comps[comp_id]['name']}/{club['name']}")
         assert response.status_code == 200

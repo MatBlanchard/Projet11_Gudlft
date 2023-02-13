@@ -5,21 +5,23 @@ from flask import template_rendered
 
 def clubs():
     return [
-    {
-        "name":"Test Club One",
-        "email":"one@testclub.com",
-        "points":"13"
-    },
-    {
-        "name":"Test Club Two",
-        "email": "two@testclub.com",
-        "points":"4"
-    },
-    {   "name":"Test Club Three",
-        "email": "three@testclub.com",
-        "points":"12"
-    }
-]
+        {
+            "name": "Test Club One",
+            "email": "one@testclub.com",
+            "points": "13"
+        },
+        {
+            "name": "Test Club Two",
+            "email": "two@testclub.com",
+            "points": "4"
+        },
+        {
+            "name": "Test Club Three",
+            "email": "three@testclub.com",
+            "points": "12"
+        }
+    ]
+
 
 def competitions():
     return [
@@ -40,16 +42,19 @@ def competitions():
         }
     ]
 
+
 @pytest.fixture
 def app(mocker):
     mocker.patch.object(server, "clubs", clubs())
     mocker.patch.object(server, "competitions", competitions())
     return server.create_app({"TESTING": True})
 
+
 @pytest.fixture
 def client(app):
     with app.test_client() as client:
         return client
+
 
 @pytest.fixture
 def captured_templates(app):

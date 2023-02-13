@@ -2,6 +2,7 @@ import server
 from tests.conftest import clubs, competitions
 from utils import get_future_competitions
 
+
 class TestBook:
 
     clubs = clubs()
@@ -73,7 +74,7 @@ class TestBook:
         assert server.error_default in response.data.decode()
 
     def test_invalid_comp_and_invalid_club_should_return_welcome_page(self, client, captured_templates):
-        response = client.get(f"/book/invalid_comp/invalid_club")
+        response = client.get("/book/invalid_comp/invalid_club")
         assert response.status_code == 200
         template, context = captured_templates[0]
         assert template.name == "welcome.html"

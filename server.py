@@ -1,5 +1,5 @@
 from utils import load_competitions, load_clubs, get_future_competitions
-from flask import Flask,render_template,request,redirect,flash,url_for
+from flask import Flask, render_template, request, redirect, flash, url_for
 
 clubs = load_clubs()
 competitions = load_competitions()
@@ -7,6 +7,7 @@ max_bookable_places = 12
 error_default = 'Something went wrong | Please try again'
 error_email = 'Please enter a valid email'
 validation_booking = 'Booking complete!'
+
 
 def create_app(config=None):
     app = Flask(__name__)
@@ -17,7 +18,7 @@ def create_app(config=None):
     def index():
         return render_template('index.html')
 
-    @app.route('/show_summary',methods=['POST'])
+    @app.route('/show_summary', methods=['POST'])
     def show_summary():
         try:
             club = [club for club in clubs if club['email'] == request.form['email']][0]
@@ -26,7 +27,6 @@ def create_app(config=None):
         except IndexError:
             flash(error_email)
             return redirect(url_for('index'))
-
 
     @app.route('/book/<competition>/<club>')
     def book(competition, club):
@@ -43,8 +43,7 @@ def create_app(config=None):
             flash(error_default)
             return render_template('welcome.html', club=club, competitions=competitions)
 
-
-    @app.route('/purchase_places',methods=['POST'])
+    @app.route('/purchase_places', methods=['POST'])
     def purchase_places():
         try:
             globals()['competitions'] = get_future_competitions(competitions)
