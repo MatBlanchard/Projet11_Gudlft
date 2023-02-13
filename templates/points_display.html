@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -9,17 +10,17 @@
             <ul>
                 {% for club in clubs %}
                 <li>
-                    {{club['name']}}<br />
+                    {{club['name']}}<br>
                     Number of Points: {{club['points']}}
+                    <hr>
                 </li>
-                <hr>
                 {% endfor %}
             </ul>
-    </body>
-    <button id="back" onclick="goBack()">Back</button>
-    <script>
+        <button id="back" onclick="goBack()">Back</button>
+        <script>
         function goBack() {
           window.history.back();
         }
     </script>
+    </body>
 </html>
