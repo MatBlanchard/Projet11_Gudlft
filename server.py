@@ -22,7 +22,6 @@ def create_app(config=None):
     def show_summary():
         try:
             club = [club for club in clubs if club['email'] == request.form['email']][0]
-            globals()['competitions'] = get_future_competitions(competitions)
             return render_template('welcome.html', club=club, competitions=competitions)
         except IndexError:
             flash(error_email)
@@ -31,9 +30,8 @@ def create_app(config=None):
     @app.route('/book/<competition>/<club>')
     def book(competition, club):
         try:
-            globals()['competitions'] = get_future_competitions(competitions)
             club = [c for c in clubs if c['name'] == club][0]
-            competition = [c for c in competitions if c['name'] == competition][0]
+            competition = [c for c in get_future_competitions(competitions) if c['name'] == competition][0]
             if club and competition:
                 max_places = int(club['points'])
                 if max_places > max_bookable_places:
@@ -46,8 +44,7 @@ def create_app(config=None):
     @app.route('/purchase_places', methods=['POST'])
     def purchase_places():
         try:
-            globals()['competitions'] = get_future_competitions(competitions)
-            competition = [c for c in competitions if c['name'] == request.form['competition']][0]
+            competition = [c for c in get_future_competitions(competitions) if c['name'] == request.form['competition']][0]
             club = [c for c in clubs if c['name'] == request.form['club']][0]
             places_required = int(request.form['places'])
             if places_required > max_bookable_places:
