@@ -29,18 +29,13 @@ def create_app(config=None):
 
     @app.route('/book/<competition>/<club>')
     def book(competition, club):
-        try:
-            club = [c for c in clubs if c['name'] == club][0]
-            competition = [c for c in get_future_competitions(competitions) if c['name'] == competition][0]
-            if club and competition:
-                max_places = int(club['points'])
-                if max_places > max_bookable_places:
-                    max_places = max_bookable_places
-                return render_template('booking.html', club=club, competition=competition, max_places=max_places)
-        except IndexError:
-            flash(error_default)
+        foundClub = [c for c in clubs if c['name'] == club][0]
+        foundCompetition = [c for c in competitions if c['name'] == competition][0]
+        if foundClub and foundCompetition:
+            return render_template('booking.html', club=foundClub, competition=foundCompetition)
+        else:
+            flash("Something went wrong-please try again")
             return render_template('welcome.html', club=club, competitions=competitions)
-
     @app.route('/purchasePlaces', methods=['POST'])
     def purchasePlaces():
         competition = [c for c in competitions if c['name'] == request.form['competition']][0]
