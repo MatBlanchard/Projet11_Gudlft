@@ -41,26 +41,14 @@ def create_app(config=None):
             flash(error_default)
             return render_template('welcome.html', club=club, competitions=competitions)
 
-    @app.route('/purchase_places', methods=['POST'])
-    def purchase_places():
-        try:
-            competition = [c for c in get_future_competitions(competitions) if c['name'] == request.form['competition']][0]
-            club = [c for c in clubs if c['name'] == request.form['club']][0]
-            places_required = int(request.form['places'])
-            if places_required > max_bookable_places:
-                flash(error_default)
-                return render_template('welcome.html', club=club, competitions=competitions)
-            competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-places_required
-            club['points'] = int(club['points'])-places_required
-            flash(validation_booking)
-            return render_template('welcome.html', club=club, competitions=competitions)
-        except (IndexError, ValueError):
-            flash(error_default)
-            try:
-                club = [c for c in clubs if c['name'] == request.form['club']][0]
-                return render_template('welcome.html', club=club, competitions=competitions)
-            except IndexError:
-                return redirect(url_for('index'))
+    @app.route('/purchasePlaces', methods=['POST'])
+    def purchasePlaces():
+        competition = [c for c in competitions if c['name'] == request.form['competition']][0]
+        club = [c for c in clubs if c['name'] == request.form['club']][0]
+        placesRequired = int(request.form['places'])
+        competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+        flash('Great-booking complete!')
+        return render_template('welcome.html', club=club, competitions=competitions)
 
     @app.route('/logout')
     def logout():
