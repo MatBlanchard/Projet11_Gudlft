@@ -62,10 +62,6 @@ def create_app(config=None):
             except IndexError:
                 return redirect(url_for('index'))
 
-    @app.route('/points_display')
-    def points_display():
-        return render_template('points_display.html', clubs=clubs)
-
     @app.route('/logout')
     def logout():
         return redirect(url_for('index'))
