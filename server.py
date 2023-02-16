@@ -18,14 +18,10 @@ def create_app(config=None):
     def index():
         return render_template('index.html')
 
-    @app.route('/show_summary', methods=['POST'])
-    def show_summary():
-        try:
-            club = [club for club in clubs if club['email'] == request.form['email']][0]
-            return render_template('welcome.html', club=club, competitions=competitions)
-        except IndexError:
-            flash(error_email)
-            return redirect(url_for('index'))
+    @app.route('/showSummary', methods=['POST'])
+    def showSummary():
+        club = [club for club in clubs if club['email'] == request.form['email']][0]
+        return render_template('welcome.html', club=club, competitions=competitions)
 
     @app.route('/book/<competition>/<club>')
     def book(competition, club):
